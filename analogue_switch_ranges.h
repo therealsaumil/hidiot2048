@@ -23,7 +23,7 @@
  * Range S4: 645 - 630
  * 
  * If you port this to a new board, you will need to change these
- * values
+ * values. Use the "calibrate_analogue_input.ino" sketch to do this
  */
 
 // Should be one of HIDIOT or DIGISPARK
