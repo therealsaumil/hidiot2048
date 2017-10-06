@@ -20,7 +20,7 @@ My first HIDIOT project was to build a Morse Code keyboard. As a more serious pr
 - The HIDIOT https://rawhex.com/collections/hidiot-kits
 - 1 x Breadboard
 - 5 x Button switches
-- 1 x SSD1306xLED OLED display ([Aliexpress](https://www.aliexpress.com/item/0-96-inch-IIC-Serial-White-OLED-Display-Module-128X64-I2C-SSD1306-12864-LCD-Screen-Board/32780054633.html), [Amazon](https://www.amazon.co.uk/Kuman-Yellow-Display-Arduino-Raspberry/dp/B01MSPCZWZ/ref=as_li_ss_tl))
+- 1 x SSD1306 0.96" White 128x64 OLED display ([Aliexpress](https://www.aliexpress.com/item/0-96-inch-IIC-Serial-White-OLED-Display-Module-128X64-I2C-SSD1306-12864-LCD-Screen-Board/32780054633.html), [Amazon](https://www.amazon.co.uk/Kuman-Yellow-Display-Arduino-Raspberry/dp/B01MSPCZWZ/ref=as_li_ss_tl))
 - 1 x 4.7k ohm Resistor
 - 3 x 10k ohm Resistors
 - 1 x 47k ohm Resistor
