@@ -17,10 +17,10 @@ My first HIDIOT project was to build a Morse Code keyboard. As a more serious pr
 
 ### Components needed
 
-- The HIDIOT
+- The HIDIOT https://rawhex.com/collections/hidiot-kits
 - 1 x Breadboard
 - 5 x Button switches
-- 1 x SSD1306xLED OLED display
+- 1 x SSD1306xLED OLED display ([Aliexpress](https://www.aliexpress.com/item/0-96-inch-IIC-Serial-White-OLED-Display-Module-128X64-I2C-SSD1306-12864-LCD-Screen-Board/32780054633.html), [Amazon](https://www.amazon.co.uk/Kuman-Yellow-Display-Arduino-Raspberry/dp/B01MSPCZWZ/ref=as_li_ss_tl))
 - 1 x 4.7k ohm Resistor
 - 3 x 10k ohm Resistors
 - 1 x 47k ohm Resistor
@@ -53,7 +53,7 @@ The four switches are connected to a single pin `PB5` and the input is treated a
 
 ## Programming Notes
 
-All programming is done using the Arduino IDE. Please read https://docs.hidiot.com on how to set up the Arduino IDE for programming the HIDIOT. I used a modified version of the `DigisparkOLED` library to drive the SS1306 OLED display. The library had to be slimmed down for the entire compiled sketch to fit on in the HIDIOT's memory.
+All programming is done using the Arduino IDE. Please read https://docs.hidiot.com on how to [set up the Arduino IDE](https://docs.hidiot.com/cutting_code/setting_up_your_hidiot/) for programming the HIDIOT. I used a modified version of the `DigisparkOLED` library to drive the SS1306 OLED display. The library had to be slimmed down for the entire compiled sketch to fit on in the HIDIOT's memory.
 
 ## Game Play
 
