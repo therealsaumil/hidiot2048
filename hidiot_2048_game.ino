@@ -26,15 +26,6 @@
  * 
  * Use PB5 as Analogue Input.
  * 
- * We want to differentiate between 4 analogue input levels
- * and indicate if S1, S2, S3 or S4 have been pressed, based on
- * the following values:
- * 
- * Range S1: 975 - 955
- * Range S2: 870 - 850
- * Range S3: 780 - 760
- * Range S4: 700 - 680 
- * 
  * TODO:
  * detect deadlock: no more moves possible
  *
@@ -44,6 +35,7 @@
  */
 
 #include <CompactDigisparkOLED.h>
+#include "analogue_switch_ranges.h"
 
 const int WINNING PROGMEM = 2048;
 
@@ -59,6 +51,8 @@ const char DOWN   PROGMEM = +1;
 #define S_DOWN    2
 #define S_UP      3
 #define S_RIGHT   4
+
+#define DEBUGMODE
 
 const byte redLED    PROGMEM = 1;
 const byte PBFIVE    PROGMEM = 5;      // pinMode 5, analogRead 0
@@ -92,9 +86,12 @@ void setup()
    moveto(0, 0);
    oled.println(F("2048 - BY SAUMIL SHAH"));
    oled.println(F(""));
-   oled.println(F("Press any button"));
-   oled.println(F("to START"));
-   oled.println(F(""));
+   oled.println(F("Merge adjoining cells"));
+   oled.println(F("having the same value"));
+   oled.println(F("using the 4 buttons"));
+   oled.println(F("LEFT, DOWN, UP, RIGHT"));
+   oled.println(F("GOAL: Reach 2048"));
+   oled.println(F("               READY?"));
 
    // turn the LED off
    digitalWrite(redLED, LOW);
@@ -171,10 +168,12 @@ void press_start()
 
    randomSeed(button_code);
    // for debugging purposes only
+#ifdef DEBUGMODE
+   moveto(7, 0);
    oled.print(button_code);
    oled.print(F(" "));
-   oled.println(random(1000));
-   // end debugging
+   oled.print(random(1000));
+#endif
    delay(100);
    oled.clear();
 }
@@ -222,16 +221,20 @@ void processInput()
 // identify which button is pressed
 byte identify_button_pressed()
 {
-   if(input <= 975 && input >= 955) {
+#ifdef DEBUGMODE
+   moveto(7, 0);
+   oled.print(input);
+#endif
+   if(input <= S1_MAX && input >= S1_MIN) {
       return(S_LEFT);   // 1
    }
-   if(input <= 870 && input >= 850) {
+   if(input <= S2_MAX && input >= S2_MIN) {
       return(S_DOWN);   // 2
    }
-   if(input <= 780 && input >= 760) {
+   if(input <= S3_MAX && input >= S3_MIN) {
       return(S_UP);     // 3
    }
-   if(input <= 700 && input >= 680) {
+   if(input <= S4_MAX && input >= S4_MIN) {
       return(S_RIGHT);  // 4
    }
    return(0);
