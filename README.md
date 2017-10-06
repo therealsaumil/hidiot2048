@@ -27,25 +27,25 @@ My first HIDIOT project was to build a Morse Code keyboard. As a more serious pr
 ### Circuit Diagram
 
 ```
-VCC -----+- 4.7k --+-- 10k --+-- 10k --+-- 10k --+-- 47k -- GND
-         |         |         |         |         |
-       RESET       S1        S2        S3        S4
-         |         |         |         |         |
-    +----+---------+---------+---------+---------+     S1 = Left
-    |                                                  S2 = Down
-    |           +-------+                              S3 = Up
-    +----- PB5  |  AT   | VCC                          S4 = Right
-        D+ PB3  |  85   | PB2 -------------------+
-        D- PB4  |       | PB1 (LED1)             |
-           GND  |       | PB0 (S1) ----------+   |
-                +-------+                    |   |
-                                    VCC GND SDA SCL
-                                     |   |   |   |
-                                     |   |   |   |
-                                  +-----------------+
-                                  | SSD1306 OLED    |
-                                  |     128 x 64    |
-                                  +-----------------+
+VCC -- 4.7k --+-- 10k --+-- 10k --+-- 10k --+-- 47k --+-- GND
+              |         |         |         |         |
+               / S1      / S2      / S3      / S4      / RESET
+              |         |         |         |         |
+    +---------+---------+---------+---------+---------+ 
+    |                                                 S1 = Left
+    |          +----v----+                            S2 = Down
+    +----- PB5 |1  AT   8| VCC                        S3 = Up
+        D+ PB3 |2 Tiny  7| PB2 -----------------+     S4 = Right
+        D- PB4 |3  85   6| PB1 (LED1)           |
+           GND |4       5| PB0 (S1) --------+   |
+               +---------+                  |   |
+                                   VCC GND SDA SCL
+                                    |   |   |   |
+                                    |   |   |   |
+                                 +-----------------+
+                                 | SSD1306 OLED    |
+                                 |     128 x 64    |
+                                 +-----------------+
 ```
 The four switches are connected to a single pin `PB5` and the input is treated as analogue input. `PB5` is also the `RESET` pin. Some clever work had to be done to keep the voltage level above 2.2V at all times (H/T Steve Lord). Values lower than that would trigger an accidental reset. This is where the resistor bridge divider comes in handy (H/T Udayan Shah).
 
