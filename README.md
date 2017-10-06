@@ -1,5 +1,7 @@
 # hidiot2048
-The 2048 game, built and programmed on the HIDIOT
+The 2048 game, built and programmed on the HIDIOT microcomputer.
+
+![HIDIOT 2048](hidiot2048_photo.jpg)
 
 ## About the HIDIOT
 
