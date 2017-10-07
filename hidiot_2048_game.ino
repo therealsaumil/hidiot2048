@@ -28,13 +28,14 @@
  * 
  * TODO:
  * detect deadlock: no more moves possible
+ * display the score somehow
  *
  * Thanks:
  * Udayan Shah
  * Steve Lord   @RawHex
  */
 
-#include <CompactDigisparkOLED.h>
+#include "CompactDigisparkOLED.h"
 #include "analogue_switch_ranges.h"
 
 const int WINNING PROGMEM = 2048;
@@ -48,11 +49,11 @@ const char RIGHT  PROGMEM = +1;
 const char DOWN   PROGMEM = +1;
 
 #define S_LEFT    1
-#define S_DOWN    2
-#define S_UP      3
+#define S_UP      2
+#define S_DOWN    3
 #define S_RIGHT   4
 
-#define DEBUGMODE
+//#define DEBUGMODE
 
 const byte redLED    PROGMEM = 1;
 const byte PBFIVE    PROGMEM = 5;      // pinMode 5, analogRead 0
@@ -67,8 +68,8 @@ boolean input_present = false;
 boolean input_processed = false;
 unsigned long button_code;
 
-int grid[4][4];
-int score;
+unsigned int grid[4][4];
+unsigned int score;
 
 void setup()
 {
@@ -76,23 +77,23 @@ void setup()
    pinMode(redLED, OUTPUT);
    digitalWrite(redLED, HIGH);
 
-   // initialize OLED display
-   oled.begin();
-   oled.clear();
-
    // initialize PB5 as input:
    pinMode(PBFIVE, INPUT);
 
-   moveto(0, 0);
-   oled.println(F("2048 - BY SAUMIL SHAH"));
-   oled.println(F(""));
-   oled.println(F("Merge adjoining cells"));
-   oled.println(F("having the same value"));
-   oled.println(F("using the 4 buttons"));
-   oled.println(F("LEFT, DOWN, UP, RIGHT"));
-   oled.println(F("GOAL: Reach 2048"));
-   oled.println(F("               READY?"));
+   // initialize OLED display
+   oled.begin();
 
+   moveto(0, 0);
+   oled.print(F(
+      "2048 - BY SAUMIL SHAH\n\n"
+      "Merge adjoining cells\n"
+      "having the same value\n"
+      "using the 4 buttons\n"
+      "LEFT, DOWN, UP, RIGHT\n"
+      "GOAL: Reach 2048\n"
+      "               READY?"
+   ));
+   
    // turn the LED off
    digitalWrite(redLED, LOW);
 
@@ -157,8 +158,8 @@ void press_start()
    while(true) {
       input = analogRead(0);
       if(input < THRESHOLD) {
-         delay(debounce);
-         input = analogRead(0);
+         delay(debounce);           // wait until the input settles
+         input = analogRead(0);     // and read the input again
          if(input < THRESHOLD) {
             button_code = millis() * input;
             break;
@@ -167,8 +168,8 @@ void press_start()
    }
 
    randomSeed(button_code);
-   // for debugging purposes only
 #ifdef DEBUGMODE
+   // for debugging purposes only
    moveto(7, 0);
    oled.print(button_code);
    oled.print(F(" "));
@@ -226,22 +227,35 @@ byte identify_button_pressed()
    oled.print(input);
 #endif
    if(input <= S1_MAX && input >= S1_MIN) {
+#ifdef DEBUGMODE
+      oled.print(F(" left "));
+#endif
       return(S_LEFT);   // 1
    }
    if(input <= S2_MAX && input >= S2_MIN) {
-      return(S_DOWN);   // 2
+#ifdef DEBUGMODE
+      oled.print(F(" up   "));
+#endif
+      return(S_UP);   // 2
    }
    if(input <= S3_MAX && input >= S3_MIN) {
-      return(S_UP);     // 3
+#ifdef DEBUGMODE
+      oled.print(F(" down "));
+#endif
+      return(S_DOWN);     // 3
    }
    if(input <= S4_MAX && input >= S4_MIN) {
+#ifdef DEBUGMODE
+      oled.print(F(" right"));
+#endif
       return(S_RIGHT);  // 4
    }
    return(0);
 }
 
 // set up the 4x4 array
-// of cells
+// of cells and place the first
+// pair of numbers in it
 void init_grid()
 {
    score = 0;
@@ -287,7 +301,6 @@ void plot_two_or_four()
 {
    byte r, value;
    byte x, y;
-   boolean successfully_plotted;
 
    // first check if we have empty space in the grid
    if(grid_full()) {
@@ -299,15 +312,9 @@ void plot_two_or_four()
    // 90% probability of a 2
    // 10% probability of a 4
    r = random(10);
-   if(r == 9) {
-      value = 4;
-   }
-   else {
-      value = 2;
-   }
+   value = (r == 9) ? 4 : 2;
 
    // find a blank cell and plot the value
-   successfully_plotted = false;
    do {
       // generate two sets of random co-ordinates
       // between 0 and 3
@@ -316,9 +323,9 @@ void plot_two_or_four()
 
       if(grid[x][y] == 0) {
          grid[x][y] = value;
-         successfully_plotted = true;
+         break;
       }
-   } while(!successfully_plotted);
+   } while(true);
 }
 
 // prints the 4x4 grid cells
@@ -337,12 +344,11 @@ void print_grid()
 
       // print the ith row
       for(j = 0; j < 4; j++) {
+         moveto(row, col);
          if(grid[i][j] != 0) {
-            moveto(row, col);
             printf4d(grid[i][j]);
          }
          else {
-            moveto(row, col);
             oled.print(F("    "));
          }
          col += 5;
@@ -450,9 +456,7 @@ boolean row_wise_summation(byte row, char shift_direction)
          grid[row][col] = merge_cells(this_cell, next_cell);
          grid[row][col - shift_direction] = 0;
          unchanged = false;
-         if(!grid_modified) {
-            grid_modified = true;
-         }
+         grid_modified = true;
       }
    }
 
@@ -497,9 +501,7 @@ boolean column_wise_summation(byte col, char shift_direction)
          grid[row][col] = merge_cells(this_cell, next_cell);
          grid[row - shift_direction][col] = 0;
          unchanged = false;
-         if(!grid_modified) {
-            grid_modified = true;
-         }
+         grid_modified = true;
       }
    }
 
